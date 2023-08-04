@@ -303,14 +303,17 @@ $(document).ready(function(){
 							</td>
 							<td>{{i.vehicle_number}}</td>
 							<td>{{i.vehicle_type}}</td>
-							<td>{{i.vehicle_type}}</td>
+							<td>{{i.vehicle_model}}</td>
 							<td>{{i.vehicle_description}}</td>
 							<td>
 								
 
-								<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+								<a href="#editEmployeeModal" class="edit" data-toggle="modal" data-vehicle_number="{{i.vehicle_number}}"
+								data-vehicle_type="{{i.vehicle_type}}" data-vehicle_model="{{i.vehicle_model}}" data-vehicle_description=
+								"{{i.vehicle_description}}" data-dataid="{{i.id}}"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
 								
-								<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+								<a href="#deleteEmployeeModal" class="delete" data-toggle="modal" data-dataid="{{i.id}}">
+									<i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
 							</td>
 						</tr>
 						{% endfor %}
@@ -445,7 +448,7 @@ $(document).ready(function(){
 	<div id="editEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form method="post" action="{% url 'patch' %}" >
+				<form method="post"  id="editform" >
                     {% csrf_token %}
 					<div class="modal-header">						
 						<h4 class="modal-title">Edit Details</h4>
@@ -454,11 +457,12 @@ $(document).ready(function(){
 					<div class="modal-body">					
 						<div class="form-group">
 							<label>Vehicle Number</label>
-							<input type="text" class="form-control" required name="Vehicle_number" id="Vehicle_number" value="{{data.vehicle_number}}">
+							<input type="text" class="form-control" required name="Vehicle_number" id="edit_vnumber"
+							 value="">
 						</div>
 						<div class="form-group">
 							<label>Vehicle Type</label>
-							<select name="Vehicle_type" id="Vehicle_type">
+							<select name="Vehicle_type" id="edit_vtype">
 								<option value="Two">Two Wheelers</option>
 								<option value="Three">Three Wheelers</option>
 								<option value="Four">Four Wheelers</option>
@@ -469,14 +473,16 @@ $(document).ready(function(){
 						</div>
 						<div class="form-group">
 							<label>Vehicle Model</label>
-							<input type="text" class="form-control" required name="Vehicle_model" id="Vehicle_model" value="{{data.vehicle_model}}">
+							<input type="text" class="form-control" required name="Vehicle_model" id="edit_vmodel"
+							 value="">
 
 							
 
 						</div>
 						<div class="form-group">
 							<label>Vehicle Description</label>
-							<textarea class="form-control" name="Vehicle_description" id="Vehicle_description" value="{{data.vehicle_description}}" required></textarea>
+							<textarea class="form-control" name="Vehicle_description" id="edit_vdescription"
+							 value="" required></textarea>
 						</div>					
 					</div>
 					<div class="modal-footer">
@@ -491,7 +497,7 @@ $(document).ready(function(){
 	<div id="deleteEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form>
+				<form method="get" id="deleteform">
 					<div class="modal-header">						
 						<h4 class="modal-title">Delete Employee</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -508,5 +514,34 @@ $(document).ready(function(){
 			</div>
 		</div>
 	</div>
+	<script>
+		
+		
+        $('input').focus(function(){
+             $(this).css('background','hsl(221, 100%, 46%)')
+        })
+        
+        $('input').blur(function(){  
+         $(this).css('background','white')
+        })    
+		$(document).on("click",".edit",function(){
+			var ve_number=$(this).attr("data-vehicle_number")
+			var ve_type=$(this).attr("data-vehicle_type")
+			var ve_model=$(this).attr("data-vehicle_model")
+			var ve_description=$(this).attr("data-vehicle_description")
+			var dataid=$(this).attr("data-dataid")
+		    $('#edit_vnumber').val(ve_number)
+		    $('#edit_vtype').val(ve_type)
+	    	$('#edit_vmodel').val(ve_model)
+	     	$('#edit_vdescription').val(ve_description)
+			$('#editform').attr("action",`/edit/${dataid}/`)
+			// alert($('#editform').attr("action"))
+		}) 
+		
+		$(document).on("click",".delete",function(){
+			var dataid=$(this).attr("data-dataid")
+			$('#deleteform').attr("action",`/delete/${dataid}/`)
+		}) 
+	</script>
 </body>
 </html>
