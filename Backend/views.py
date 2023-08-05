@@ -20,7 +20,7 @@ class Homepage(PermissionRequiredMixin,View):
         }
         return render(request,self.template,context)
     
-class Add_Details(View):
+class Add_Details(PermissionRequiredMixin,View):
     permission_required="Backend.add_vehicle_details"
     page_name="index.html"
     def post(self, request):
@@ -35,10 +35,9 @@ class Add_Details(View):
             vehicle_description=vehicle_description
         )
         vehicle_data.save()
-        return render(request, self.page_name)
-    
+        return redirect("Home")
 
-class Edit_Details(View):
+class Edit_Details(PermissionRequiredMixin,View):
     permission_required="Backend.change_vehicle_details"
     template_name="index.html"
     def post(self,request,dataid):
@@ -54,10 +53,10 @@ class Edit_Details(View):
             vehicle_model=vehicle_model,
             vehicle_description=vehicle_description
         )
-         return render(request, self.template_name,{'data':data})
+         return redirect("Home")
 
 
-class Delete_Details(DeleteView):
+class Delete_Details(PermissionRequiredMixin,DeleteView):
     permission_required="Backend.delete_vehicle_details"
 
     # model = Vehicle_details
@@ -68,7 +67,7 @@ class Delete_Details(DeleteView):
     def get(self,request,dataid):
        data=Vehicle_details.objects.filter(id=dataid)
        data.delete()
-       return redirect(self.template_name)
+       return redirect("Home")
     
 
     
@@ -115,7 +114,7 @@ class Login(View):
                 if user is not None:
                     login(request=request, user=user)
                 
-                    return render(request,self.template_name)
+                    return redirect("Home")
                 else:  
                      return render(request,self.login_page)
          
