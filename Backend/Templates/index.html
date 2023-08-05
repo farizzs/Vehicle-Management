@@ -307,13 +307,16 @@ $(document).ready(function(){
 							<td>{{i.vehicle_description}}</td>
 							<td>
 								
-
+                                {% if perms.Backend.change_vehicle_details %}
 								<a href="#editEmployeeModal" class="edit" data-toggle="modal" data-vehicle_number="{{i.vehicle_number}}"
 								data-vehicle_type="{{i.vehicle_type}}" data-vehicle_model="{{i.vehicle_model}}" data-vehicle_description=
 								"{{i.vehicle_description}}" data-dataid="{{i.id}}"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-								
+								{% endif %}
+
+								{% if perms.Backend.delete_vehicle_details %}
 								<a href="#deleteEmployeeModal" class="delete" data-toggle="modal" data-dataid="{{i.id}}">
 									<i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+									{% endif %}
 							</td>
 						</tr>
 						{% endfor %}
